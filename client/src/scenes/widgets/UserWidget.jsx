@@ -1,15 +1,15 @@
 import {
-  ManageAccountsOutlined,
   EditOutlined,
   LocationOnOutlined,
+  ManageAccountsOutlined,
   WorkOutlineOutlined,
 } from "@mui/icons-material";
-import { Box, Typography, Divider, useTheme } from "@mui/material";
-import UserImage from "components/UserImage";
+import { Box, Divider, Typography, useTheme } from "@mui/material";
 import FlexBetween from "components/FlexBetween";
+import UserImage from "components/UserImage";
 import WidgetWrapper from "components/WidgetWrapper";
-import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 const UserWidget = ({ userId, picturePath }) => {
@@ -95,7 +95,7 @@ const UserWidget = ({ userId, picturePath }) => {
       <Divider />
 
       {/* THIRD ROW */}
-      <Box p="1rem 0">
+      {/* <Box p="1rem 0">
         <FlexBetween mb="0.5rem">
           <Typography color={medium}>Who's viewed your profile</Typography>
           <Typography color={main} fontWeight="500">
@@ -108,7 +108,7 @@ const UserWidget = ({ userId, picturePath }) => {
             {impressions}
           </Typography>
         </FlexBetween>
-      </Box>
+      </Box> */}
 
       <Divider />
 

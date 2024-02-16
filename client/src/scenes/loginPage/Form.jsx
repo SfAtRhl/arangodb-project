@@ -23,7 +23,7 @@ const registerSchema = yup.object().shape({
   password: yup.string().required("required"),
   location: yup.string().required("required"),
   occupation: yup.string().required("required"),
-  picture: yup.string().required("required"),
+  picture: yup.string(),
 });
 
 const loginSchema = yup.object().shape({
@@ -84,6 +84,7 @@ const Form = () => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(values),
     });
+
     const loggedIn = await loggedInResponse.json();
     onSubmitProps.resetForm();
     if (loggedIn) {
@@ -94,6 +95,10 @@ const Form = () => {
         })
       );
       navigate("/home");
+    } else {
+      const data = await loggedInResponse.json();
+      // console.log(data.msg || "Login failed");
+      alert(data.msg || "Login failed");
     }
   };
 

@@ -4,7 +4,15 @@ import {
   FavoriteOutlined,
   ShareOutlined,
 } from "@mui/icons-material";
-import { Box, Divider, IconButton, Typography, useTheme } from "@mui/material";
+import {
+  Box,
+  Divider,
+  IconButton,
+  Typography,
+  useTheme,
+  InputBase,
+  Button,
+} from "@mui/material";
 import FlexBetween from "components/FlexBetween";
 import Friend from "components/Friend";
 import WidgetWrapper from "components/WidgetWrapper";
@@ -93,16 +101,58 @@ const PostWidget = ({
         </IconButton>
       </FlexBetween>
       {isComments && (
-        <Box mt="0.5rem">
-          {comments.map((comment, i) => (
-            <Box key={`${name}-${i}`}>
-              <Divider />
-              <Typography sx={{ color: main, m: "0.5rem 0", pl: "1rem" }}>
-                {comment}
-              </Typography>
-            </Box>
-          ))}
-          <Divider />
+        <Box>
+          <Box
+            sx={{
+              height: 100,
+              borderRadius: 1,
+              mt: "0.5rem",
+              overflow: "auto",
+              "&::-webkit-scrollbar": {
+                width: "0.4em",
+                display: "none",
+              },
+            }}
+          >
+            {comments.map((comment, i) => (
+              <Box key={`${name}-${i}`}>
+                <Divider />
+                <Typography sx={{ color: main, m: "0.5rem 0", pl: "1rem" }}>
+                  {comment}
+                </Typography>
+              </Box>
+            ))}
+            <Divider />
+          </Box>
+          <FlexBetween sx={{
+
+         gap:"0.25rem",
+          mt: "1rem",
+            }}
+          >
+            <InputBase
+              placeholder="What's on your mind..."
+              // onChange={(e) => setPost(e.target.value)}
+              // value={"post"}
+              sx={{
+                width: "100%",
+                backgroundColor: palette.neutral.light,
+                borderRadius: "2rem",
+                padding: "0.2rem 0.4rem",
+              }}
+            />
+            <Button
+              // disabled={!post}
+              // onClick={handlePost}
+              sx={{
+                color: palette.background.alt,
+                backgroundColor: palette.primary.main,
+                borderRadius: "3rem",
+              }}
+            >
+              Comment
+            </Button>
+          </FlexBetween>
         </Box>
       )}
     </WidgetWrapper>

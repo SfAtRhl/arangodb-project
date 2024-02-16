@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPosts } from "state";
 import PostWidget from "./PostWidget";
+import { Box } from "@mui/material";
 
 const PostsWidget = ({ userId, isProfile = false }) => {
   const dispatch = useDispatch();
@@ -39,33 +40,45 @@ const PostsWidget = ({ userId, isProfile = false }) => {
 
   return (
     <>
-      {posts.map(
-        ({
-          _id,
-          userId,
-          firstName,
-          lastName,
-          description,
-          location,
-          picturePath,
-          userPicturePath,
-          likes,
-          comments,
-        }) => (
-          <PostWidget
-            key={_id}
-            postId={_id}
-            postUserId={userId}
-            name={`${firstName} ${lastName}`}
-            description={description}
-            location={location}
-            picturePath={picturePath}
-            userPicturePath={userPicturePath}
-            likes={likes}
-            comments={comments}
-          />
-        )
-      )}
+      <Box
+        sx={{
+          height: 500,
+          borderRadius: 1,
+          overflow: "auto",
+          "&::-webkit-scrollbar": {
+            width: "0.4em",
+            display: "none",
+          },
+        }}
+      >
+        {posts.map(
+          ({
+            _id,
+            userId,
+            firstName,
+            lastName,
+            description,
+            location,
+            picturePath,
+            userPicturePath,
+            likes,
+            comments,
+          }) => (
+            <PostWidget
+              key={_id}
+              postId={_id}
+              postUserId={userId}
+              name={`${firstName} ${lastName}`}
+              description={description}
+              location={location}
+              picturePath={picturePath}
+              userPicturePath={userPicturePath}
+              likes={likes}
+              comments={comments}
+            />
+          )
+        )}
+      </Box>
     </>
   );
 };

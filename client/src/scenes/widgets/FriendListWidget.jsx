@@ -35,18 +35,30 @@ const FriendListWidget = ({ userId }) => {
         fontWeight="500"
         sx={{ mb: "1.5rem" }}
       >
-        Friend List
+        Fallowers List
       </Typography>
-      <Box display="flex" flexDirection="column" gap="1.5rem">
-        {friends.map((friend) => (
-          <Friend
-            key={friend._id}
-            friendId={friend._id}
-            name={`${friend.firstName} ${friend.lastName}`}
-            subtitle={friend.occupation}
-            userPicturePath={friend.picturePath}
-          />
-        ))}
+      <Box
+        sx={{
+          height: 220,
+          borderRadius: 1,
+          overflow: "auto",
+          "&::-webkit-scrollbar": {
+            width: "0.4em",
+            display: "none",
+          },
+        }}
+      >
+        <Box display="flex" flexDirection="column" gap="1.5rem">
+          {friends.map((friend) => (
+            <Friend
+              key={friend._id}
+              friendId={friend._id}
+              name={`${friend.firstName} ${friend.lastName}`}
+              subtitle={friend.occupation}
+              userPicturePath={friend.picturePath}
+            />
+          ))}
+        </Box>
       </Box>
     </WidgetWrapper>
   );
