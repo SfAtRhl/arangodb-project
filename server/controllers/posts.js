@@ -1,12 +1,24 @@
+import { setupArangoDB } from "../config/db.js";
 import Post from "../models/Post.js";
 import User from "../models/User.js";
+import {
+  getLatestPosts,
+  getUserLatestPosts,
+  insertIntoPosts,
+} from "../services/post.js";
+import { findUserById } from "../services/user.js";
 
 /* CREATE */
 export const createPost = async (req, res) => {
   try {
     const { userId, description, picturePath } = req.body;
-    const user = await User.findById(userId);
-    const newPost = new Post({
+    // Initialize ArangoDB
+    const db = await setupArangoDB();
+    // Find the user by id
+    const user = await findUserById(db, userId);
+    // const user = await User.findById(userId);
+    // console.log(user);
+    const newPost = {
       userId,
       firstName: user.firstName,
       lastName: user.lastName,
@@ -16,10 +28,9 @@ export const createPost = async (req, res) => {
       picturePath,
       likes: {},
       comments: [],
-    });
-    await newPost.save();
+    };
 
-    const post = await Post.find();
+    const post = await insertIntoPosts(db, newPost);
     res.status(201).json(post);
   } catch (err) {
     res.status(409).json({ message: err.message });
@@ -31,10 +42,10 @@ export const getFeedPosts = async (req, res) => {
   try {
     // Initialize ArangoDB
     const db = await setupArangoDB();
-    // Find the user by email
-    const user = await findUserById(db, id);
+    // Find all latest posts
+    const posts = await getLatestPosts(db);
     // const post = await Post.find();
-    res.status(200).json(post);
+    res.status(200).json(posts);
   } catch (err) {
     res.status(404).json({ message: err.message });
   }
@@ -43,8 +54,11 @@ export const getFeedPosts = async (req, res) => {
 export const getUserPosts = async (req, res) => {
   try {
     const { userId } = req.params;
-    const post = await Post.find({ userId });
-    res.status(200).json(post);
+    // Initialize ArangoDB
+    const db = await setupArangoDB();
+    // Find all latest posts
+    const posts = await getUserLatestPosts(db, userId);
+    res.status(200).json(posts);
   } catch (err) {
     res.status(404).json({ message: err.message });
   }

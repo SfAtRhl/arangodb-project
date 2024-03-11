@@ -4,33 +4,44 @@ export const getLatestPosts = async (db) => {
   try {
     const query = aql`
       FOR post IN posts
-      SORT post.createdAt DESC
       RETURN post
     `;
     // LIMIT ${limit}
 
     const cursor = await db.query(query);
     const latestPosts = await cursor.all();
-
     return latestPosts;
   } catch (error) {
     console.error("Error fetching latest posts:", error);
     throw error;
   }
 };
-
-export const findUserById = async (db, id) => {
+export const getUserLatestPosts = async (db, userId) => {
   try {
-    const userCollection = db.collection("users");
-    // Perform a query to find the user by email
+    const query = aql`
+      FOR post IN posts
+      FILTER post.userId == ${userId}
+      RETURN post
+    `;
+    // LIMIT ${limit}
+
+    const cursor = await db.query(query);
+    const userPosts = await cursor.all();
+    return userPosts;
+  } catch (error) {
+    console.error("Error fetching latest posts:", error);
+    throw error;
+  }
+};
+
+export const insertIntoPosts = async (db, post) => {
+  try {
+    const postsCollection = db.collection("posts");
     const cursor = await db.query(aql`
-      FOR user IN ${userCollection}
-      FILTER user._key == ${id}
-      LIMIT 1
-      RETURN user
+      INSERT ${post} INTO ${postsCollection} RETURN NEW
     `);
-    const user = await cursor.next();
-    return user;
+    const Savedpost = await cursor.next();
+    return Savedpost;
   } catch (error) {
     console.error(error);
     throw error;

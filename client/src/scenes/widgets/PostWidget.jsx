@@ -13,6 +13,7 @@ import {
   InputBase,
   Button,
 } from "@mui/material";
+import ErrorBoundary from "components/ErrorBoundary";
 import FlexBetween from "components/FlexBetween";
 import Friend from "components/Friend";
 import WidgetWrapper from "components/WidgetWrapper";
@@ -63,6 +64,7 @@ const PostWidget = ({
         subtitle={location}
         userPicturePath={userPicturePath}
       />
+
       <Typography color={main} sx={{ mt: "1rem" }}>
         {description}
       </Typography>
@@ -124,10 +126,10 @@ const PostWidget = ({
             ))}
             <Divider />
           </Box>
-          <FlexBetween sx={{
-
-         gap:"0.25rem",
-          mt: "1rem",
+          <FlexBetween
+            sx={{
+              gap: "0.25rem",
+              mt: "1rem",
             }}
           >
             <InputBase
