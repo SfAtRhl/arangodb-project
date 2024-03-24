@@ -3,6 +3,7 @@ import Post from "../models/Post.js";
 import User from "../models/User.js";
 import {
   getLatestPosts,
+  getPostbyId,
   getUserLatestPosts,
   insertIntoPosts,
 } from "../services/post.js";
@@ -23,6 +24,7 @@ export const createPost = async (req, res) => {
       firstName: user.firstName,
       lastName: user.lastName,
       location: user.location,
+      occupation: user.occupation,
       description,
       userPicturePath: user.picturePath,
       picturePath,
@@ -30,8 +32,10 @@ export const createPost = async (req, res) => {
       comments: [],
     };
 
-    const post = await insertIntoPosts(db, newPost);
-    res.status(201).json(post);
+    await insertIntoPosts(db, newPost);
+    const posts = await getLatestPosts(db);
+
+    res.status(201).json(posts);
   } catch (err) {
     res.status(409).json({ message: err.message });
   }
@@ -57,7 +61,7 @@ export const getUserPosts = async (req, res) => {
     // Initialize ArangoDB
     const db = await setupArangoDB();
     // Find all latest posts
-    const posts = await getUserLatestPosts(db, userId);
+    const posts = await getUserLatestPosts(db, userId.replace("_", "/"));
     res.status(200).json(posts);
   } catch (err) {
     res.status(404).json({ message: err.message });
@@ -69,20 +73,23 @@ export const likePost = async (req, res) => {
   try {
     const { id } = req.params;
     const { userId } = req.body;
-    const post = await Post.findById(id);
-    const isLiked = post.likes.get(userId);
-
-    if (isLiked) {
-      post.likes.delete(userId);
-    } else {
-      post.likes.set(userId, true);
+    const db = await setupArangoDB();
+    // Find all latest posts
+    const post = await getPostbyId(db, id.replace("_", "/"));
+    // Initialize likes if it's undefined
+    if (!post.likes) {
+      post.likes = {};
     }
-
-    const updatedPost = await Post.findByIdAndUpdate(
-      id,
-      { likes: post.likes },
-      { new: true }
-    );
+    // Check if user already liked the post
+    const isLiked = post.likes.hasOwnProperty(userId);
+    // Toggle like status
+    if (isLiked) {
+      delete post.likes[userId];
+    } else {
+      post.likes[userId] = true;
+    }
+    await db.collection("posts").replace(post._id, post);
+    const updatedPost = await getPostbyId(db, id.replace("_", "/"));
 
     res.status(200).json(updatedPost);
   } catch (err) {

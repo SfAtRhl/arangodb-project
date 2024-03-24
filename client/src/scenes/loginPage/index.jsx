@@ -28,7 +28,7 @@ const LoginPage = () => {
       >
         <FlexBetween gap="1.75rem">
           <Typography fontWeight="bold" fontSize="32px" color="primary">
-            Sociopedia
+            Not-Linkedin
           </Typography>
           <IconButton onClick={() => dispatch(setMode())}>
             {theme.palette.mode === "dark" ? (
@@ -48,7 +48,7 @@ const LoginPage = () => {
         backgroundColor={theme.palette.background.alt}
       >
         <Typography fontWeight="500" variant="h5" sx={{ mb: "1.5rem" }}>
-          Welcome to Socipedia, the Social Media for Sociopaths!
+          Welcome to Not-Linkedin, the Social Media for U!
         </Typography>
         <Form />
       </Box>

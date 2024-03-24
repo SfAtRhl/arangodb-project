@@ -24,7 +24,7 @@ import WidgetWrapper from "components/WidgetWrapper";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPosts } from "state";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const MyPostWidget = ({ picturePath }) => {
   const dispatch = useDispatch();
@@ -63,8 +63,8 @@ const MyPostWidget = ({ picturePath }) => {
   };
 
   return (
-    <WidgetWrapper per>
-      <FlexBetween gap="1.5rem">
+    <WidgetWrapper>
+      <FlexBetween gap="1rem">
         <UserImage image={picturePath} />
         <InputBase
           placeholder="What's on your mind..."
@@ -82,8 +82,8 @@ const MyPostWidget = ({ picturePath }) => {
         <Box
           border={`1px solid ${medium}`}
           borderRadius="5px"
-          mt="1rem"
-          p="1rem"
+          mt="0.2rem"
+          p="0.2rem"
         >
           <Dropzone
             acceptedFiles=".jpg,.jpeg,.png"
@@ -123,7 +123,7 @@ const MyPostWidget = ({ picturePath }) => {
         </Box>
       )}
 
-      <Divider sx={{ margin: "1.25rem 0" }} />
+      <Divider sx={{ margin: "0.5rem 0" }} />
 
       <FlexBetween>
         <FlexBetween gap="0.25rem" onClick={() => setIsImage(!isImage)}>

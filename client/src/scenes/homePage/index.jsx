@@ -17,26 +17,38 @@ const HomePage = () => {
       <Navbar />
       <Box
         width="100%"
-        padding="1rem 6%"
+        paddingX="3rem"
+        paddingTop="6rem"
         display={isNonMobileScreens ? "flex" : "block"}
         gap="0.5rem"
         justifyContent="space-between"
       >
-        {/* <Box flexBasis={isNonMobileScreens ? "26%" : undefined}>
-          <UserWidget userId={_id} picturePath={picturePath} />
-        </Box> */}
+        {isNonMobileScreens && (
+          <Box flexBasis={isNonMobileScreens ? "26%" : undefined}>
+            <UserWidget userId={_id} picturePath={picturePath} />
+          </Box>
+        )}
         <Box
-          flexBasis={isNonMobileScreens ? "42%" : undefined}
+          flexBasis={isNonMobileScreens ? "60%" : undefined}
           mt={isNonMobileScreens ? undefined : "2rem"}
+          // maxHeight="80vh"
+          // sx={{
+          //   borderRadius: 1,
+          //   overflow: "auto",
+          //   "&::-webkit-scrollbar": {
+          //     width: "0.4em",
+          //     display: "none",
+          //   },
+          // }}
         >
           <MyPostWidget picturePath={picturePath} />
           <PostsWidget userId={_id} />
         </Box>
         {isNonMobileScreens && (
-          <Box flexBasis="26%">
+          <Box flexBasis="20%">
             <AdvertWidget />
-            <Box m="1rem 0" />
-            <FriendListWidget userId={_id} />
+            {/* <Box m="1rem 0" />
+            <FriendListWidget userId={_id} /> */}
           </Box>
         )}
       </Box>

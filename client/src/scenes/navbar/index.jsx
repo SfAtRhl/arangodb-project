@@ -42,7 +42,14 @@ const Navbar = () => {
   const fullName = `${user.firstName} ${user.lastName}`;
 
   return (
-    <Box display="" >
+    <Box
+      position="fixed"
+      top={0}
+      width="100%"
+      bgcolor="background.default"
+      boxShadow={1}
+      zIndex={1000}
+    >
       <FlexBetween padding="1rem 6%" backgroundColor={alt}>
         <FlexBetween gap="1.75rem">
           <Typography
@@ -57,7 +64,7 @@ const Navbar = () => {
               },
             }}
           >
-            Sociopedia
+            Not-Linkedin
           </Typography>
           {isNonMobileScreens && (
             <FlexBetween
@@ -77,15 +84,8 @@ const Navbar = () => {
         {/* DESKTOP NAV */}
         {isNonMobileScreens ? (
           <FlexBetween gap="1rem">
-            <IconButton onClick={() => dispatch(setMode())}>
-              {theme.palette.mode === "dark" ? (
-                <DarkMode sx={{ fontSize: "25px" }} />
-              ) : (
-                <LightMode sx={{ color: dark, fontSize: "25px" }} />
-              )}
-            </IconButton>
-            <Message sx={{ fontSize: "25px" }} />
-            <Notifications sx={{ fontSize: "25px" }} />
+            {/* <Message sx={{ fontSize: "25px" }} /> */}
+            {/* <Notifications sx={{ fontSize: "25px" }}  /> */}
 
             <FormControl variant="standard" value={fullName}>
               <Select
@@ -113,6 +113,13 @@ const Navbar = () => {
                 </MenuItem>
               </Select>
             </FormControl>
+            <IconButton onClick={() => dispatch(setMode())}>
+              {theme.palette.mode === "dark" ? (
+                <DarkMode sx={{ fontSize: "25px" }} />
+              ) : (
+                <LightMode sx={{ color: dark, fontSize: "25px" }} />
+              )}
+            </IconButton>
           </FlexBetween>
         ) : (
           <IconButton

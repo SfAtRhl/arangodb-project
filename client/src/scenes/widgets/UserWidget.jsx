@@ -22,10 +22,13 @@ const UserWidget = ({ userId, picturePath }) => {
   const main = palette.neutral.main;
 
   const getUser = async () => {
-    const response = await fetch(`http://localhost:3001/users/${userId}`, {
-      method: "GET",
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const response = await fetch(
+      `http://localhost:3001/users/${userId.replace("/", "_")}`,
+      {
+        method: "GET",
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
     const data = await response.json();
     setUser(data);
   };
@@ -54,15 +57,15 @@ const UserWidget = ({ userId, picturePath }) => {
       <FlexBetween
         gap="0.5rem"
         pb="1.1rem"
-        onClick={() => navigate(`/profile/${userId}`)}
+        onClick={() => navigate(`/profile/${userId.replace("/", "_")}`)}
       >
         <FlexBetween gap="1rem">
           <UserImage image={picturePath} />
           <Box>
             <Typography
-              variant="h4"
+              variant="h5"
               color={dark}
-              fontWeight="500"
+              fontWeight="600"
               sx={{
                 "&:hover": {
                   color: palette.primary.light,
@@ -72,12 +75,10 @@ const UserWidget = ({ userId, picturePath }) => {
             >
               {firstName} {lastName}
             </Typography>
-            <Typography color={medium}>
-              {friends?.length || 0} friends
-            </Typography>
+            <Typography color={medium}>{occupation} </Typography>
           </Box>
         </FlexBetween>
-        <ManageAccountsOutlined />
+        {/* <ManageAccountsOutlined /> */}
       </FlexBetween>
 
       <Divider />
@@ -85,12 +86,37 @@ const UserWidget = ({ userId, picturePath }) => {
       {/* SECOND ROW */}
       <Box p="1rem 0">
         <Box display="flex" alignItems="center" gap="1rem" mb="0.5rem">
-          <LocationOnOutlined fontSize="large" sx={{ color: main }} />
-          <Typography color={medium}>{location}</Typography>
+          <FlexBetween
+            gap="3rem"
+            sx={{ justifyContent: "space-between", width: "100%" }}
+          >
+            <Typography color={medium} flexGrow={1}>
+              Profile viewers
+            </Typography>
+            <Typography color={palette.primary.dark}> {26}</Typography>
+          </FlexBetween>
         </Box>
-        <Box display="flex" alignItems="center" gap="1rem">
-          <WorkOutlineOutlined fontSize="large" sx={{ color: main }} />
-          <Typography color={medium}>{occupation}</Typography>
+        <Box
+          display="flex"
+          alignItems="center"
+          gap="1rem"
+          width="100%"
+          justifyContent="space-between"
+        >
+          <Box gap="1rem">
+            <Typography
+              color={medium}
+              variant="subtitle1"
+              component="subtitle1"
+            >
+              Connections Connect
+            </Typography>
+            <Typography color={medium} variant="body2" component="h6">
+              with alumni
+            </Typography>
+          </Box>
+
+          <Typography color={palette.primary.dark}> {473}</Typography>
         </Box>
       </Box>
 

@@ -27,6 +27,7 @@ const PostWidget = ({
   name,
   description,
   location,
+  occupation,
   picturePath,
   userPicturePath,
   likes,
@@ -36,22 +37,26 @@ const PostWidget = ({
   const dispatch = useDispatch();
   const token = useSelector((state) => state.token);
   const loggedInUserId = useSelector((state) => state.user._id);
-  const isLiked = Boolean(likes[loggedInUserId]);
-  const likeCount = Object.keys(likes).length;
+  const isLiked =
+    likes && loggedInUserId ? Boolean(likes[loggedInUserId]) : false;
+  const likeCount = likes ? Object.keys(likes).length : 0;
 
   const { palette } = useTheme();
   const main = palette.neutral.main;
   const primary = palette.primary.main;
 
   const patchLike = async () => {
-    const response = await fetch(`http://localhost:3001/posts/${postId}/like`, {
-      method: "PATCH",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ userId: loggedInUserId }),
-    });
+    const response = await fetch(
+      `http://localhost:3001/posts/${postId.replace("/", "_")}/like`,
+      {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userId: loggedInUserId }),
+      }
+    );
     const updatedPost = await response.json();
     dispatch(setPost({ post: updatedPost }));
   };
@@ -61,7 +66,7 @@ const PostWidget = ({
       <Friend
         friendId={postUserId}
         name={name}
-        subtitle={location}
+        subtitle={occupation}
         userPicturePath={userPicturePath}
       />
 
@@ -94,7 +99,7 @@ const PostWidget = ({
             <IconButton onClick={() => setIsComments(!isComments)}>
               <ChatBubbleOutlineOutlined />
             </IconButton>
-            <Typography>{comments.length}</Typography>
+            <Typography>{comments?.length ?? 0}</Typography>
           </FlexBetween>
         </FlexBetween>
 
@@ -104,28 +109,36 @@ const PostWidget = ({
       </FlexBetween>
       {isComments && (
         <Box>
-          <Box
-            sx={{
-              height: 100,
-              borderRadius: 1,
-              mt: "0.5rem",
-              overflow: "auto",
-              "&::-webkit-scrollbar": {
-                width: "0.4em",
-                display: "none",
-              },
-            }}
-          >
-            {comments.map((comment, i) => (
-              <Box key={`${name}-${i}`}>
-                <Divider />
-                <Typography sx={{ color: main, m: "0.5rem 0", pl: "1rem" }}>
-                  {comment}
-                </Typography>
-              </Box>
-            ))}
-            <Divider />
-          </Box>
+          {comments.length != 0 && (
+            <Box
+              sx={{
+                height: 100,
+                borderRadius: 1,
+                mt: "0.5rem",
+                overflow: "auto",
+                "&::-webkit-scrollbar": {
+                  width: "0.4em",
+                  display: "none",
+                },
+              }}
+            >
+              {comments.map((comment, i) => (
+                <Box key={`${name}-${i}`}>
+                  <Divider />
+                  <Typography
+                    sx={{
+                      color: main,
+                      m: "0.5rem 0",
+                      pl: "1rem",
+                    }}
+                  >
+                    {comment}
+                  </Typography>
+                </Box>
+              ))}
+              <Divider />
+            </Box>
+          )}
           <FlexBetween
             sx={{
               gap: "0.25rem",
@@ -140,7 +153,7 @@ const PostWidget = ({
                 width: "100%",
                 backgroundColor: palette.neutral.light,
                 borderRadius: "2rem",
-                padding: "0.2rem 0.4rem",
+                padding: "0.2rem 0.6rem",
               }}
             />
             <Button
@@ -150,6 +163,11 @@ const PostWidget = ({
                 color: palette.background.alt,
                 backgroundColor: palette.primary.main,
                 borderRadius: "3rem",
+                padding: "0.2rem 0.rem",
+                "&:hover": {
+                  color: palette.primary.light,
+                  cursor: "pointer",
+                },
               }}
             >
               Comment

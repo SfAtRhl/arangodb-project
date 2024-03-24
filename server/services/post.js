@@ -34,6 +34,22 @@ export const getUserLatestPosts = async (db, userId) => {
   }
 };
 
+export const getPostbyId = async (db, postId) => {
+  try {
+    const postCollection = db.collection("posts");
+    const cursor = await db.query(aql`
+      FOR post IN ${postCollection}
+      FILTER post._id == ${postId}
+      LIMIT 1
+      RETURN post
+    `);
+    const post = await cursor.next();
+    return post;
+  } catch (error) {
+    console.error("Error fetching post by Id:", error);
+    throw error;
+  }
+};
 export const insertIntoPosts = async (db, post) => {
   try {
     const postsCollection = db.collection("posts");

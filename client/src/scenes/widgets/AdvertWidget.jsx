@@ -1,4 +1,4 @@
-import { Typography, useTheme } from "@mui/material";
+import { Box, Typography, useTheme } from "@mui/material";
 import FlexBetween from "components/FlexBetween";
 import WidgetWrapper from "components/WidgetWrapper";
 
@@ -9,28 +9,44 @@ const AdvertWidget = () => {
   const medium = palette.neutral.medium;
 
   return (
-    <WidgetWrapper>
-      <FlexBetween>
-        <Typography color={dark} variant="h5" fontWeight="500">
-          Sponsored
-        </Typography>
-        <Typography color={medium}>Create Ad</Typography>
+    <WidgetWrapper sx={{ padding: "0.5rem" }}>
+      <FlexBetween sx={{ justifyContent: "flex-start" }}>
+        <img
+          width="50rem"
+          height="50rem"
+          alt="advert"
+          src="../assets/adobe.png"
+          style={{ borderRadius: "0.2rem" }}
+        />
+        <Box sx={{ pl: "0.5rem" }}>
+          <Typography color={dark} variant="h6" fontWeight="500">
+            Adobe
+          </Typography>
+          <Typography color={dark} variant="subtitle2" fontWeight="300">
+            3,162,578 fallowers
+          </Typography>
+          <Typography color={dark} variant="subtitle2" fontWeight="300">
+            Promoted
+          </Typography>
+        </Box>
       </FlexBetween>
+      <Typography
+        color={medium}
+        variant="subtitle2"
+        fontWeight="200"
+        mt="0.5rem"
+      >
+        Unleash your creativity with Adobe: Explore limitless possibilities in
+        design, photography, video editing, and more. Start your creative
+        journey today!"
+      </Typography>
       <img
         width="100%"
         height="auto"
         alt="advert"
-        src="http://localhost:3001/assets/info4.jpeg"
-        style={{ borderRadius: "0.75rem", margin: "0.75rem 0" }}
+        src="../assets/ads.jpg"
+        style={{ borderRadius: "0.75rem", margin: "0.75rem 0 0.1rem 0" }}
       />
-      <FlexBetween>
-        <Typography color={main}>MikaCosmetics</Typography>
-        <Typography color={medium}>mikacosmetics.com</Typography>
-      </FlexBetween>
-      <Typography color={medium} m="0.5rem 0">
-        Your pathway to stunning and immaculate beauty and made sure your skin
-        is exfoliating skin and shining like light.
-      </Typography>
     </WidgetWrapper>
   );
 };

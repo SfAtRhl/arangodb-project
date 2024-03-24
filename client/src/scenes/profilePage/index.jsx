@@ -15,10 +15,13 @@ const ProfilePage = () => {
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
 
   const getUser = async () => {
-    const response = await fetch(`http://localhost:3001/users/${userId}`, {
-      method: "GET",
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const response = await fetch(
+      `http://localhost:3001/users/${userId.replace("/", "_")}`,
+      {
+        method: "GET",
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
     const data = await response.json();
     setUser(data);
   };
@@ -35,14 +38,15 @@ const ProfilePage = () => {
       <Box
         width="100%"
         padding="2rem 6%"
+        paddingTop="6rem"
         display={isNonMobileScreens ? "flex" : "block"}
         gap="2rem"
         justifyContent="center"
       >
         <Box flexBasis={isNonMobileScreens ? "26%" : undefined}>
           <UserWidget userId={userId} picturePath={user.picturePath} />
-          <Box m="2rem 0" />
-          <FriendListWidget userId={userId} />
+          {/* <Box m="2rem 0" /> */}
+          {/* <FriendListWidget userId={userId} /> */}
         </Box>
         <Box
           flexBasis={isNonMobileScreens ? "42%" : undefined}
