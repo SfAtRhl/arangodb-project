@@ -56,7 +56,6 @@ const Form = () => {
   const isRegister = pageType === "register";
 
   const register = async (values, onSubmitProps) => {
-    // this allows us to send form info with image
     const formData = new FormData();
     for (let value in values) {
       formData.append(value, values[value]);
@@ -97,7 +96,6 @@ const Form = () => {
       navigate("/home");
     } else {
       const data = await loggedInResponse.json();
-      // console.log(data.msg || "Login failed");
       alert(data.msg || "Login failed");
     }
   };
@@ -237,7 +235,6 @@ const Form = () => {
             />
           </Box>
 
-          {/* BUTTONS */}
           <Box>
             <Button
               fullWidth

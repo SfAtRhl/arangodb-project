@@ -84,9 +84,6 @@ const Navbar = () => {
         {/* DESKTOP NAV */}
         {isNonMobileScreens ? (
           <FlexBetween gap="1rem">
-            {/* <Message sx={{ fontSize: "25px" }} /> */}
-            {/* <Notifications sx={{ fontSize: "25px" }}  /> */}
-
             <FormControl variant="standard" value={fullName}>
               <Select
                 value={fullName}

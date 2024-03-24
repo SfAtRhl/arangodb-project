@@ -22,10 +22,8 @@ export const register = async (req, res) => {
     const salt = await bcrypt.genSalt();
     const passwordHash = await bcrypt.hash(password, salt);
 
-    // Initialize ArangoDB
     const db = await setupArangoDB();
 
-    // Check if the user already exists
     const existingUser = await findUserByEmail(db, email);
 
     if (existingUser) {
@@ -33,7 +31,6 @@ export const register = async (req, res) => {
         .status(400)
         .json({ msg: "User with this email already exists." });
     }
-    // Insert the new user into the database
     const newUser = {
       firstName,
       lastName,
@@ -52,7 +49,6 @@ export const register = async (req, res) => {
     `;
 
     const result = await db.query(insertUserQuery);
-    // const savedUser = result.next();
 
     res.status(201).json(result);
   } catch (err) {
@@ -65,12 +61,9 @@ export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Initialize ArangoDB
     const db = await setupArangoDB();
-    // Find the user by email
     const user = await findUserByEmail(db, email);
 
-    // Retrieve the user from the cursor
     if (!user) {
       return res.status(400).json({ msg: "User does not exist." });
     }

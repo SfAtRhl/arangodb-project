@@ -3,7 +3,7 @@ import { aql } from "arangojs";
 export const findUserByEmail = async (db, email) => {
   try {
     const userCollection = db.collection("users");
-    // Perform a query to find the user by email
+
     const cursor = await db.query(aql`
       FOR user IN ${userCollection}
       FILTER user.email == ${email}
@@ -44,11 +44,6 @@ export const updateUser = async (db, user) => {
       WITH ${user}
       IN ${userCollection}
     `);
-
-    // const updatedUser = await cursor.next();
-    // console.log(updatedUser);
-
-    // return updatedUser;
   } catch (err) {
     const code = 500;
     console.error("Error updating user:", err, code);

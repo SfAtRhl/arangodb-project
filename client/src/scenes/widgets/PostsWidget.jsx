@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { setPosts } from "state";
 import PostWidget from "./PostWidget";
 import { Box, Typography, useMediaQuery } from "@mui/material";
-import FlexBetween from "components/FlexBetween";
 import FlexCenter from "components/FlexCenter";
 
 const PostsWidget = ({ userId, isProfile = false }) => {
@@ -47,7 +46,7 @@ const PostsWidget = ({ userId, isProfile = false }) => {
     } else {
       getPosts();
     }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []); 
 
   return (
     <>

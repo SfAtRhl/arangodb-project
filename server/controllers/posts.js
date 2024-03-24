@@ -1,6 +1,7 @@
 import { setupArangoDB } from "../config/db.js";
 import Post from "../models/Post.js";
 import User from "../models/User.js";
+import { getCommentByPost, insertIntoComments } from "../services/comment.js";
 import {
   getLatestPosts,
   getPostbyId,
@@ -58,11 +59,53 @@ export const getFeedPosts = async (req, res) => {
 export const getUserPosts = async (req, res) => {
   try {
     const { userId } = req.params;
-    // Initialize ArangoDB
     const db = await setupArangoDB();
-    // Find all latest posts
     const posts = await getUserLatestPosts(db, userId.replace("_", "/"));
     res.status(200).json(posts);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};
+export const getAllComment = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const db = await setupArangoDB();
+    const posts = await getCommentByPost(db, id.replace("_", "/"));
+    res.status(200).json(posts);
+
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};
+
+export const commentPost = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { userId, comment } = req.body;
+    const db = await setupArangoDB();
+
+    const userExists = await db.collection("users").documentExists(userId);
+
+    const postExists = await db
+      .collection("posts")
+      .documentExists(id.replace("_", "/"));
+
+    if (!userExists || !postExists) {
+      return res.status(404).json({ message: "User or post not found" });
+    }
+
+    const commentDoc = {
+      userId,
+      postId: id.replace("_", "/"),
+      comment,
+      createdAt: new Date(),
+    };
+
+    const result = insertIntoComments(db, commentDoc);
+  
+    res
+      .status(201)
+      .json({ message: "Comment added successfully", comment: result });
   } catch (err) {
     res.status(404).json({ message: err.message });
   }
@@ -74,15 +117,11 @@ export const likePost = async (req, res) => {
     const { id } = req.params;
     const { userId } = req.body;
     const db = await setupArangoDB();
-    // Find all latest posts
     const post = await getPostbyId(db, id.replace("_", "/"));
-    // Initialize likes if it's undefined
     if (!post.likes) {
       post.likes = {};
     }
-    // Check if user already liked the post
     const isLiked = post.likes.hasOwnProperty(userId);
-    // Toggle like status
     if (isLiked) {
       delete post.likes[userId];
     } else {

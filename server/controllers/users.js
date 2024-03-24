@@ -6,9 +6,7 @@ import { findUserById, updateUser } from "../services/user.js";
 export const getUser = async (req, res) => {
   try {
     const { id } = req.params;
-    // Initialize ArangoDB
     const db = await setupArangoDB();
-    // Find the user by email
     const user = await findUserById(db, id.replace("_", "/"));
     res.status(200).json(user);
   } catch (err) {
@@ -50,13 +48,6 @@ export const addRemoveFriend = async (req, res) => {
       friend.friends = [];
     }
 
-    // if (user.friends.includes(friendId)) {
-    //   user.friends = user.friends.filter((id) => id !== friendId);
-    //   friend.friends = friend.friends.filter((id) => id !== id);
-    // } else {
-    //   user.friends.push(friendId);
-    //   friend.friends.push(id);
-    // }
     if (user.friends.includes(friend._id)) {
       user.friends = user.friends.filter((id) => id !== friend._id);
       friend.friends = friend.friends.filter((id) => id !== user._id);
@@ -65,7 +56,6 @@ export const addRemoveFriend = async (req, res) => {
       friend.friends.push(user._id);
     }
     await updateUser(db, user);
-    // await updateUser(db, friend);
 
     const friends = await Promise.all(
       user.friends.map((friendId) => findUserById(db, friendId))

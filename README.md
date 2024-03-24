@@ -2,6 +2,10 @@
 
 Build a COMPLETE Fullstack Responsive MERN App with Auth, Likes, Dark Mode | React, ArangoDB, MUI
 
+![alt text](/UI/main.png "Screenshot of Social Media App")
+
+:warning: Check out the UI Folder
+
 ### Installing
 
 Follow these steps to run this project in your local computer.

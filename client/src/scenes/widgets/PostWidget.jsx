@@ -13,12 +13,13 @@ import {
   InputBase,
   Button,
 } from "@mui/material";
-import ErrorBoundary from "components/ErrorBoundary";
 import FlexBetween from "components/FlexBetween";
 import Friend from "components/Friend";
+import UserImage from "components/UserImage";
 import WidgetWrapper from "components/WidgetWrapper";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { setPost } from "state";
 
 const PostWidget = ({
@@ -31,9 +32,16 @@ const PostWidget = ({
   picturePath,
   userPicturePath,
   likes,
-  comments,
 }) => {
   const [isComments, setIsComments] = useState(false);
+  const [comments, setComments] = useState([]);
+  const [Comment, setComment] = useState("");
+
+  useEffect(() => {
+    getCommentPost();
+  }, [Comment]);
+
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const token = useSelector((state) => state.token);
   const loggedInUserId = useSelector((state) => state.user._id);
@@ -45,6 +53,34 @@ const PostWidget = ({
   const main = palette.neutral.main;
   const primary = palette.primary.main;
 
+  const getCommentPost = async () => {
+    const response = await fetch(
+      `http://localhost:3001/posts/${postId.replace("/", "_")}/comment`,
+      {
+        method: "GET",
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+    const data = await response.json();
+    setComments(data);
+  };
+
+  const handlePostComment = async () => {
+    const response = await fetch(
+      `http://localhost:3001/posts/${postId.replace("/", "_")}/comment`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userId: loggedInUserId, comment: Comment }),
+      }
+    );
+    setComment("");
+    const updatedPost = await response.json();
+    dispatch(setPost({ post: updatedPost }));
+  };
   const patchLike = async () => {
     const response = await fetch(
       `http://localhost:3001/posts/${postId.replace("/", "_")}/like`,
@@ -112,9 +148,10 @@ const PostWidget = ({
           {comments.length != 0 && (
             <Box
               sx={{
-                height: 100,
                 borderRadius: 1,
                 mt: "0.5rem",
+                py: "1rem",
+                height: "15rem",
                 overflow: "auto",
                 "&::-webkit-scrollbar": {
                   width: "0.4em",
@@ -122,18 +159,55 @@ const PostWidget = ({
                 },
               }}
             >
-              {comments.map((comment, i) => (
-                <Box key={`${name}-${i}`}>
+              {comments.map((commentObj, i) => (
+                <Box key={`${i}`} sx={{ pb: "1rem" }}>
                   <Divider />
-                  <Typography
+
+                  <Box
                     sx={{
-                      color: main,
-                      m: "0.5rem 0",
-                      pl: "1rem",
+                      py: "0.5rem",
+                      display: "flex",
+                      flexWrap: "wrap",
+                      alignItems: "center",
                     }}
                   >
-                    {comment}
-                  </Typography>
+                    <UserImage
+                      image={commentObj.user.picturePath}
+                      size="55px"
+                    />
+                    <Box
+                      sx={{ ml: "0.5rem" }}
+                      onClick={() => {
+                        navigate(
+                          `/profile/${commentObj.user.userId.replace("/", "_")}`
+                        );
+                      }}
+                    >
+                      <Typography
+                        color={main}
+                        variant="title1"
+                        fontWeight="500"
+                        sx={{
+                          "&:hover": {
+                            color: palette.primary.light,
+                            cursor: "pointer",
+                          },
+                        }}
+                      >
+                        {commentObj.user.firstName} {commentObj.user.lastName}
+                      </Typography>
+                      <Typography
+                        variant="subtitle1"
+                        fontWeight="300"
+                        sx={{
+                          color: main,
+                          pl: "1rem",
+                        }}
+                      >
+                        {commentObj.comment.comment}
+                      </Typography>
+                    </Box>
+                  </Box>
                 </Box>
               ))}
               <Divider />
@@ -147,8 +221,8 @@ const PostWidget = ({
           >
             <InputBase
               placeholder="What's on your mind..."
-              // onChange={(e) => setPost(e.target.value)}
-              // value={"post"}
+              onChange={(e) => setComment(e.target.value)}
+              value={Comment}
               sx={{
                 width: "100%",
                 backgroundColor: palette.neutral.light,
@@ -157,15 +231,16 @@ const PostWidget = ({
               }}
             />
             <Button
-              // disabled={!post}
-              // onClick={handlePost}
+              disabled={!Comment}
+              onClick={handlePostComment}
               sx={{
-                color: palette.background.alt,
-                backgroundColor: palette.primary.main,
+                color: palette.background.main,
+                backgroundColor: palette.primary.alt,
                 borderRadius: "3rem",
-                padding: "0.2rem 0.rem",
+                padding: "0.2rem 0.6rem",
                 "&:hover": {
-                  color: palette.primary.light,
+                  color: palette.background.alt,
+                  backgroundColor: palette.primary.main,
                   cursor: "pointer",
                 },
               }}
